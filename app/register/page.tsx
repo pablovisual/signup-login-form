@@ -9,12 +9,39 @@ import { zodResolver } from '@hookform/resolvers/zod';
 interface FormData {
   firstName: string;
   lastName: string;
-  middleName: string;
+  middleName?: string;
   email: string;
   confirmEmail: string;
   password: string;
   confirmPassword: string;
 }
+
+const signUpSchema = z.object({
+  firstName: z.string().min(2, { message: 'First name is required' }),
+  lastName: z.string().min(2, { message: 'Last name is required' }),
+  middleName: z.string().optional(),
+  email: z.string().toLowerCase().email({ message: 'Invalid email address' }),
+  confirmEmail: z.string().toLowerCase().email({ message: 'Invalid email address' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters long' }),
+  confirmPassword: z.string().min(1, { message: 'Please confirm your password' }),
+}).superRefine((data, ctx) => {
+  if (data.password !== data.confirmPassword) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Passwords do not match',
+      path: ['confirmPassword'],
+    });
+  }
+  if (data.email !== data.confirmEmail) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Email do not match',
+      path: ['confirmEmail'],
+    });
+  }
+
+  
+});
 
 
 
@@ -112,7 +139,18 @@ const page: React.FC = () => {
   );
 };*/
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ 
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      middleName: '',
+      email: '',
+      confirmEmail: '',
+      password: '',
+      confirmPassword: ''
+    }
+  });
   const { emailAndPasswordRegister } = UserAuth();
   const router = useRouter();
 
@@ -140,7 +178,7 @@ const page: React.FC = () => {
               {...register('firstName', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors.firstName && <span className="text-red-500">First name is required</span>}
+            {errors.firstName && (<span className="text-red-500">{errors.firstName?.message}</span>)}
           </div>
           <div className="mb-4 col-span-1">
             <label htmlFor="lastName" className="block mb-2 text-black">Last Name</label>
@@ -150,7 +188,7 @@ const page: React.FC = () => {
               {...register('lastName', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors.lastName && <span className="text-red-500">Last name is required</span>}
+            {errors?.lastName && <span className="text-red-500">{errors?.lastName.message}</span>}
           </div>
           </div>
           <div className="mb-4 col-span-1">
@@ -170,7 +208,7 @@ const page: React.FC = () => {
               {...register('email', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors.email && <span className="text-red-500">Email is required</span>}
+            {errors?.email && <span className="text-red-500">{errors?.email.message}</span>}
           </div>
           <div className="mb-4 col-span-1">
             <label htmlFor="confirmEmail" className="block mb-2 text-black">Confirm Email</label>
@@ -180,7 +218,7 @@ const page: React.FC = () => {
               {...register('confirmEmail', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors.confirmEmail && <span className="text-red-500">Confirm email is required</span>}
+            {errors.confirmEmail && <span className="text-red-500">{errors.confirmEmail?.message}</span>}
           </div>
           <div className="mb-4 col-span-1">
             <label htmlFor="password" className="block mb-2 text-black">Password</label>
@@ -190,7 +228,7 @@ const page: React.FC = () => {
               {...register('password', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors.password && <span className="text-red-500">Password is required</span>}
+            {errors.password && <span className="text-red-500">{errors.password?.message}</span>}
           </div>
           <div className="mb-4 col-span-1">
             <label htmlFor="confirmPassword" className="block mb-2 text-black">Confirm Password</label>
@@ -200,7 +238,7 @@ const page: React.FC = () => {
               {...register('confirmPassword', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors.confirmPassword && <span className="text-red-500">Confirm password is required</span>}
+            {errors.confirmPassword?.message && <span className="text-red-500">{errors.confirmPassword?.message}</span>}
           </div>
           <div className='grid place-items-center'><button type="submit" className="col-span-2 w-1/2 p-2 bg-blue-500 text-white rounded">Sign Up</button></div>
         </form>
