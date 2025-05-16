@@ -1,20 +1,22 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { UserAuth } from '../context/AuthContext'
+import { useRouter } from 'next/navigation';
 
 type Props = {}
 
 const Navbar = () => {
-  const { user, googleSignIn, logOut} = UserAuth();
+  const { user, googleSignIn, XLogin, logOut} = UserAuth();
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
   
-  const handleSignIn = async () => {
-    try {
-      await googleSignIn();
-    } catch (error) {
-      console.error(error)
-    }
+  const handleSignUp = () => {
+    router.push('/register');
   };
+
+  const handleLogin = () => {
+    router.push('/login');
+  }
 
   const handleLogout = async () => {
     try {
@@ -51,10 +53,10 @@ const Navbar = () => {
       </ul>
 
     {loading ? null : !user ? (<ul className='flex'>
-        <li onClick={handleSignIn} className='p-2 cursor-pointer text-black'>
-          Sign In
+        <li onClick={handleSignUp} className='p-2 cursor-pointer text-black'>
+          Signup
         </li>
-        <li onClick={handleSignIn} className='p-2 cursor-pointer text-black'>
+        <li onClick={handleLogin} className='p-2 cursor-pointer text-black'>
           Login
         </li>
       </ul>) : (

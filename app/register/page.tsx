@@ -39,8 +39,6 @@ const signUpSchema = z.object({
       path: ['confirmEmail'],
     });
   }
-
-  
 });
 
 
@@ -149,7 +147,8 @@ const page: React.FC = () => {
       confirmEmail: '',
       password: '',
       confirmPassword: ''
-    }
+    },
+    mode: "onChange"
   });
   const { emailAndPasswordRegister } = UserAuth();
   const router = useRouter();
@@ -169,30 +168,30 @@ const page: React.FC = () => {
       <div className="border bg-white border-gray-300 rounded-lg p-8 w-2/5 shadow-lg">
         <h2 className="text-2xl mb-6 text-center text-black">Sign Up</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-          <div className="flex justify-between">
-          <div className="mb-4 col-span-1">
-            <label htmlFor="firstName" className="block mb-2 text-black">First Name</label>
+          <div className="lg:flex justify-between">
+          <div className="mb-4 flex flex-col">
+            <label htmlFor="firstName" className="mb-2 text-black">First Name</label>
             <input
               type="text"
               id="firstName"
               {...register('firstName', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors.firstName && (<span className="text-red-500">{errors.firstName?.message}</span>)}
+            {errors.firstName && (<span className="text-red-500 whitespace-nowrap">{errors.firstName?.message}</span>)}
           </div>
-          <div className="mb-4 col-span-1">
-            <label htmlFor="lastName" className="block mb-2 text-black">Last Name</label>
+          <div className="mb-4 flex flex-col">
+            <label htmlFor="lastName" className="mb-2 text-black">Last Name</label>
             <input
               type="text"
               id="lastName"
               {...register('lastName', { required: true })}
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
-            {errors?.lastName && <span className="text-red-500">{errors?.lastName.message}</span>}
+            {errors?.lastName && <span className="text-red-500 whitespace-nowrap">{errors?.lastName.message}</span>}
           </div>
           </div>
-          <div className="mb-4 col-span-1">
-            <label htmlFor="middleName" className="block mb-2 text-black">Middle Name (optional)</label>
+          <div className="mb-4 flex flex-col">
+            <label htmlFor="middleName" className="mb-2 text-black">Middle Name (optional)</label>
             <input
               type="text"
               id="middleName"
@@ -200,8 +199,8 @@ const page: React.FC = () => {
               className="w-full text-black p-2 border border-gray-300 rounded"
             />
           </div>
-          <div className="mb-4 col-span-1">
-            <label htmlFor="email" className="block mb-2 text-black">Email</label>
+          <div className="mb-4 flex flex-col">
+            <label htmlFor="email" className="mb-2 text-black">Email</label>
             <input
               type="email"
               id="email"
@@ -210,8 +209,8 @@ const page: React.FC = () => {
             />
             {errors?.email && <span className="text-red-500">{errors?.email.message}</span>}
           </div>
-          <div className="mb-4 col-span-1">
-            <label htmlFor="confirmEmail" className="block mb-2 text-black">Confirm Email</label>
+          <div className="mb-4 flex flex-col">
+            <label htmlFor="confirmEmail" className="mb-2 text-black">Confirm Email</label>
             <input
               type="email"
               id="confirmEmail"
@@ -220,8 +219,8 @@ const page: React.FC = () => {
             />
             {errors.confirmEmail && <span className="text-red-500">{errors.confirmEmail?.message}</span>}
           </div>
-          <div className="mb-4 col-span-1">
-            <label htmlFor="password" className="block mb-2 text-black">Password</label>
+          <div className="mb-4 flex flex-col">
+            <label htmlFor="password" className="mb-2 text-black">Password</label>
             <input
               type="password"
               id="password"
@@ -230,8 +229,8 @@ const page: React.FC = () => {
             />
             {errors.password && <span className="text-red-500">{errors.password?.message}</span>}
           </div>
-          <div className="mb-4 col-span-1">
-            <label htmlFor="confirmPassword" className="block mb-2 text-black">Confirm Password</label>
+          <div className="mb-4 flex flex-col">
+            <label htmlFor="confirmPassword" className="mb-2 text-black">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
