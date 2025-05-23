@@ -10,18 +10,18 @@ export const AuthContextProvider = ({ children }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
 
-  const githubLogin = () => {
+  const githubAcount = () => {
     const provider = new GithubAuthProvider();
     signInWithPopup(auth, provider);
 
   }
 
-  const googleLogin = () => {
+  const googleAccount = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider);
   };
 
-  const xLogin = () => {
+  const xAccount = () => {
     const provider = new TwitterAuthProvider();
     //signInWithRedirect(auth, provider);
     signInWithPopup(auth, provider);
@@ -61,7 +61,7 @@ export const AuthContextProvider = ({ children }) => {
     }, []);
 
   return (
-    <AuthContext.Provider value={ { user, emailAndPasswordRegister, githubLogin, googleLogin, logOut, xLogin} }>
+    <AuthContext.Provider value={ { user, emailAndPasswordRegister, githubAcount, googleAccount, logOut, xAccount} }>
       {children}
     </AuthContext.Provider>
   )

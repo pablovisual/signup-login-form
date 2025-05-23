@@ -1,10 +1,26 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from '@/components/ui/separator';
+import { FcGoogle } from "react-icons/fc";
+import { FaXTwitter } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
 
 interface FormData {
   firstName: string;
@@ -137,7 +153,11 @@ const page: React.FC = () => {
   );
 };*/
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ 
+  const { emailAndPasswordRegister, githubAccount, googleAccount, xAccount } = UserAuth();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       firstName: '',
@@ -150,10 +170,8 @@ const page: React.FC = () => {
     },
     mode: "onChange"
   });
-  const { emailAndPasswordRegister } = UserAuth();
-  const router = useRouter();
 
-  const onSubmit = async (data: FormData) => {
+  const signUp = async (data: FormData) => {
     const { firstName, lastName, email, password } = data;
     try {
       await emailAndPasswordRegister(firstName, lastName, email, password);
@@ -163,8 +181,155 @@ const page: React.FC = () => {
     }
   };
 
+  const githubSignUp = async () => {
+    try {
+      await githubAccount();
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      router.push('/');
+    }
+
+    catch (error) {
+      console.error(error);
+    };
+  }
+
+  const googleSignUp = async () => {
+    try {
+      await googleAccount();
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      router.push('/');
+    } catch (error) {
+      console.error(error)
+    }
+  };
+
+  const xSignUp = async () => {
+    try {
+      await xAccount();
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      router.push('/');
+    }
+
+    catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className='min-h-screen bg-gradient-to-br from-primay-50 to-primary-100 flex items-center justify-center p-4'>
+      <Card className='w-full max-w-md mx-auto'>
+        <CardHeader className='text-center'>
+          <CardTitle>Creante an Account</CardTitle>
+          <CardDescription>Enter your credentials to create an account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(signUp)} className="space-y-4">
+            <div className="w-full flex items-center justify-between">
+              <div className="space-y-2">
+                <Label htmlFor="Firstname">Firstname</Label>
+                <Input
+                  className='rounded-full'
+                  id="firstName"
+                  type="firstName"
+                  placeholder="Firstname"
+                  {...register("firstName", { required: true })}
+                />
+                {errors.firstName && (<span className="text-red-500 whitespace-nowrap">{errors.firstName?.message}</span>)}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="Lastname">Lastname</Label>
+                <Input
+                  className='rounded-full'
+                  id="Lastname"
+                  type="Lastname"
+                  placeholder="Lastname"
+                  {...register("lastName", { required: true })}
+                />
+                {errors?.lastName && <span className="text-red-500 whitespace-nowrap">{errors?.lastName.message}</span>}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="Middlename">Middlename</Label>
+              <Input
+                className='rounded-full'
+                id="Middlename"
+                type="Middlename"
+                placeholder="Middlename (optional)"
+                {...register("middleName")}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                className='rounded-full'
+                id="emaile"
+                type="email"
+                placeholder="Email"
+                {...register("email", { required: true })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Confirm Email</Label>
+              <Input
+                className='rounded-full'
+                id="confirmEmail"
+                type="email"
+                placeholder="Confirm Email"
+                {...register("confirmEmail", { required: true })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                className='rounded-full'
+                id="password"
+                type="password"
+                placeholder="Password"
+                {...register("password", { required: true })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                className='rounded-full'
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                {...register("confirmPassword")}
+              />
+            </div>
+            <Button type="submit" className="w-full rounded-full">
+              {isSubmitting ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col -mt-4">
+          <div className="relative max-[767.90px]:w-[44%] my-4 md:w-[34%] flex items-center justify-center">
+            <Separator className='' />
+            <div className="py-1 px-1.5 border uppercase text-black  rounded-full text-nowrap text-center bg-muted text-xs mx-1 ">
+              <span className='max-[767.90px]:hidden'>or sign-up with</span>
+              <span className='md:hidden'>or</span>
+            </div>
+            <Separator className='' />
+          </div>
+          <div className='max-[767.90px]:space-y-4 max-[767.90px]:w-full md:flex md:items-center md:space-x-4'>
+            <Button type="button" onClick={githubSignUp} className="w-full max-[767.90px]:flex max-[767.90px]:items-center max-[767.90px]:space-x-1 rounded-full py-3 px-8">
+              <span className='md:hidden uppercase'>sign-up with</span>
+              <FaGithub />
+            </Button>
+            <Button type="button" onClick={googleSignUp} className="w-full max-[767.90px]:flex max-[767.90px]:items-center max-[767.90px]:space-x-1 rounded-full py-3 px-8">
+              <span className='md:hidden uppercase'>sign-up with</span>
+              <FcGoogle />
+            </Button>
+            <Button type='button' onClick={xSignUp} className="w-full max-[767.90px]:flex max-[767.90px]:items-center max-[767.90px]:space-x-1 rounded-full py-3 px-8">
+              <span className='md:hidden uppercase'>sign-up with</span>
+              <FaXTwitter />
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
+    /*<div className="flex justify-center items-center h-screen">
       <div className="border bg-white border-gray-300 rounded-lg p-8 w-2/5 shadow-lg">
         <h2 className="text-2xl mb-6 text-center text-black">Sign Up</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
@@ -242,7 +407,7 @@ const page: React.FC = () => {
           <div className='grid place-items-center'><button type="submit" className="col-span-2 w-1/2 p-2 bg-blue-500 text-white rounded">Sign Up</button></div>
         </form>
       </div>
-    </div>
+    </div>*/
   );
 };
 export default page;

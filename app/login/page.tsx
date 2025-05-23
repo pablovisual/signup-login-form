@@ -36,7 +36,7 @@ const loginFormSchema = z.object({
 });
 
 const page = () => {
-  const { githubLogin, googleLogin, xLogin } = UserAuth();
+  const { githubAccount, googleAccount, xAccount } = UserAuth();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -65,7 +65,7 @@ const page = () => {
 
   const returningGithubUser = async () => {
     try {
-      await githubLogin();
+      await githubAccount();
       await new Promise(resolve => setTimeout(resolve, 2000));
       router.push('/');
     }
@@ -77,7 +77,7 @@ const page = () => {
 
   const returningGoogleUser = async () => {
     try {
-      await googleLogin();
+      await googleAccount();
       await new Promise(resolve => setTimeout(resolve, 2000));
       router.push('/');
     } catch (error) {
@@ -87,7 +87,7 @@ const page = () => {
 
   const returningXUser = async () => {
     try {
-      await xLogin();
+      await xAccount();
       await new Promise(resolve => setTimeout(resolve, 2000));
       router.push('/');
     }
@@ -149,12 +149,12 @@ const page = () => {
         </CardContent>
         <CardFooter className="flex flex-col -mt-4">
           <div className="relative max-[767.90px]:w-[44%] my-4 md:w-[30%] flex items-center justify-center">
-            <Separator className='' />
+            <Separator />
             <div className="py-1 px-1.5 border uppercase text-black  rounded-full text-nowrap text-center bg-muted text-xs mx-1 ">
               <span className='max-[767.90px]:hidden'>or continue with</span>
               <span className='md:hidden'>or</span>
             </div>
-            <Separator className='' />
+            <Separator />
           </div>
           <div className='max-[767.90px]:space-y-4 max-[767.90px]:w-full md:flex md:items-center md:space-x-4'>
             <Button type="button" onClick={returningGithubUser} className="w-full max-[767.90px]:flex max-[767.90px]:items-center max-[767.90px]:space-x-1 rounded-full py-3 px-8">
