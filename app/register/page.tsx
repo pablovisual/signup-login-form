@@ -330,7 +330,7 @@ const page: React.FC = () => {
       </Card>
     </div>
     /*<div className="flex justify-center items-center h-screen">
-      <div className="border bg-white border-gray-300 rounded-lg p-8 w-2/5 shadow-lg">
+      <div className="border bg-white border-gray-300 rounded-lg p-8 w-2/5">
         <h2 className="text-2xl mb-6 text-center text-black">Sign Up</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
           <div className="lg:flex justify-between">
